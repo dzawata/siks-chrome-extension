@@ -1,18 +1,18 @@
 {
   "manifest_version": 2,
-  "version": "0.3.0",
-  "name": "SQLite Manager",
-  "description": "manage, manipulate, plot and save one or more SQLite databases or import CSV records",
+  "version": "1.0.0",
+  "name": "SIKS tools",
+  "description": "Aplikasi untuk optimasi Sistem Informasi Kesejahteraan Sosial",
   "offline_enabled": true,
   "icons": {
-    "16": "data/icons/16.png",
-    "19": "data/icons/19.png",
-    "32": "data/icons/32.png",
-    "38": "data/icons/38.png",
-    "48": "data/icons/48.png",
-    "64": "data/icons/64.png",
-    "128": "data/icons/128.png",
-    "256": "data/icons/256.png"
+    "16": "data/icons/icon.png",
+    "19": "data/icons/icon.png",
+    "32": "data/icons/icon.png",
+    "38": "data/icons/icon.png",
+    "48": "data/icons/icon.png",
+    "64": "data/icons/icon.png",
+    "128": "data/icons/icon.png",
+    "256": "data/icons/icon.png"
   },
   "permissions": [
     "storage",
@@ -26,10 +26,14 @@
     "pages": ["data/manager-old/sandbox.html"]
   },
   "browser_action": {},
-  "homepage_url": "http://add0n.com/sqlite-manager.html",
   "background": {
     "persistent": false,
     "scripts": [
+      "config.js",
+      "js/jquery.min.js",
+      "js/background/promise.js",
+      "js/background/bg-functions.js",
+      "js/background/background.js",
       "background.js"
     ]
   }
