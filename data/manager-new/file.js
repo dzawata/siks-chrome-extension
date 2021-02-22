@@ -42,6 +42,11 @@ const callbacks = {
       option.selected = true;
       document.getElementById('active').appendChild(option);
       callbacks.activate.forEach(c => c(file));
+
+      chrome.tabs.create({
+        url: 'data/siks/index.html'
+      });
+      window.ops = option;
     }
     document.getElementById('save').disabled = false;
     document.getElementById('add').disabled = false;
@@ -186,4 +191,26 @@ document.addEventListener('keydown', e => {
       active.dispatchEvent(new Event('change'));
     }
   }
+});
+
+chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
+  console.log('sender, request', sender, request);
+  if(request.message.type == 'fecth-sql'){
+    var data = {
+        type: "response-fecth-sql",
+        data: []
+    };
+    ops.file.sql.execute(request.message.sql, []).then(function(value){
+      data.data = value;
+      chrome.runtime.sendMessage(data, function(response) {
+          console.log('responeMessage', response);
+      });
+    })
+    .catch(function(){
+      chrome.runtime.sendMessage(data, function(response) {
+          console.log('responeMessage', response);
+      });
+    });
+  }
+  return sendResponse("THANKS from SQLite Window!");
 });
