@@ -29,6 +29,13 @@ chrome.browserAction.onClicked.addListener(() => {
         type: 'radio',
         checked: prefs.interface === 'manager-old'
       });
+      chrome.contextMenus.create({
+        id: 'siks',
+        contexts: ['browser_action'],
+        title: 'SIKS Tool',
+        type: 'radio',
+        checked: prefs.interface === 'siks'
+      });
     });
   };
   chrome.runtime.onStartup.addListener(start);
