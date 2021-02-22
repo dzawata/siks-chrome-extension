@@ -1,11 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SIKS</title>
+  <title>SQLite Manager</title>
   <link rel="stylesheet" type="text/css" href="index.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
 </head>
 <body>
+  <header>
+  </header>
+  <section id="boxes"></section>
+  <footer>
+    <div>
+      <svg height="16" viewBox="0 0 1024 896">
+        <path d="M832 192c0 0-320 0-352 0s-32-32-32-32 0-21.25 0-32c0-64-64-64-64-64s-256 0-320 0S0 128 0 128v704h896c0 0 0-510 0-576S832 192 832 192zM384 192H64v-32c0 0 0-32 32-32h256c32 0 32 32 32 32V192z" fill="#8ea5bc"/>
+      </svg>
+      Open Database&nbsp;
+      <button id="file" title="Ctrl + Shift + F or Command + Shift + F">File (<u>O</u>)</button>
+      <button id="rt" title="Tampilkan Data Rumah Tangga (RT)" disabled>RT</button>
+      <button id="art" title="Tampilkan Data Anggota Rumah Tangga (ART)" disabled>ART</button>
+    </div>
+    <div>
+      <button id="history" title="Ctrl + Shift + H or Command + Shift + H" disabled><u>H</u>istory</button>
+      &nbsp;Active&nbsp;
+      <select id="active" title="use Ctrl + Shift + Number or Command + Shift + Number to switch">
+        <option disabled selected>None</option>
+      </select>
+    </div>
+  </footer>
+  <div id="history-container" class="hidden">
+    <select size="10"></select>
+  </div>
+  <script type="text/javascript" src="components/table-view/core.js"></script>
+  <script type="module" src="components/box-view/core.js"></script>
+  <script type="text/javascript" src="file.js"></script>
+  <script type="text/javascript" src="sql.js"></script>
+  <script type="text/javascript" src="index.js"></script>
+  <script type="text/javascript" src="history.js"></script>
 </body>
 </html>

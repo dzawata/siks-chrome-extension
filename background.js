@@ -2,7 +2,7 @@
 
 chrome.browserAction.onClicked.addListener(() => {
   chrome.storage.local.get({
-    interface: 'manager-new'
+    interface: 'siks'
   }, prefs => {
     chrome.tabs.create({
       url: 'data/' + prefs.interface + '/index.html'
@@ -13,7 +13,7 @@ chrome.browserAction.onClicked.addListener(() => {
 {
   const start = () => {
     chrome.storage.local.get({
-      interface: 'manager-new'
+      interface: 'siks'
     }, prefs => {
       chrome.contextMenus.create({
         id: 'manager-new',
@@ -28,6 +28,13 @@ chrome.browserAction.onClicked.addListener(() => {
         title: 'use old interface',
         type: 'radio',
         checked: prefs.interface === 'manager-old'
+      });
+      chrome.contextMenus.create({
+        id: 'siks',
+        contexts: ['browser_action'],
+        title: 'SIKS Tool',
+        type: 'radio',
+        checked: prefs.interface === 'siks'
       });
     });
   };
