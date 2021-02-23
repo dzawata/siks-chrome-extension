@@ -198,6 +198,7 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
   if(request.message.type == 'fecth-sql'){
     var data = {
         type: "response-fecth-sql",
+        message: request.message,
         data: []
     };
     ops.file.sql.execute(request.message.sql, []).then(function(value){

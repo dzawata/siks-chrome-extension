@@ -1,19 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SIKS</title>
+  <title>SIKS CHROME EXTENSION</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
+
+	<!-- Modal -->
+	<div class="modal fade" id="modalInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body" id="modal-body">
+	        <form>
+	        	<div class="form-group">
+					<label for="optKecamatan">Kecamatan</label>
+					<select class="form-control" id="data_kecamatan"></select>
+				</div>
+				<div class="form-group">
+					<label for="optKecamatan">Desa</label>
+					<select class="form-control" id="data_desa"></select>
+				</div>
+	        </form>
+	      </div>
+	      <div class="modal-footer"></div>
+	    </div>
+	  </div>
+	</div>
+
+	<div>
+		<div class="row">
+			<div class="col-lg-12">
+				<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInfo" id="rt">Data RT</button>
+				<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInfo" id="art">Data ART</button>
+				<div id="data-sql"></div>
+			</div>
+		</div>
+	</div>
+
 	<div id="wrap-loading">
 		<div class="lds-hourglass"></div>
 	    <div id="persen-loading"></div>
 	</div>
-	<h1>SIKS CHROME EXTENSION</h1>
-	<textarea id="data-sql"></textarea>
+
 	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/popper.min.js"></script>
+	<script type="text/javascript" src="../../js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script.js"></script>
 </body>
 </html>
