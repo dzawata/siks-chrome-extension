@@ -18,10 +18,12 @@ chrome.runtime.sendMessage(data, function(response) {
 */
 
 const rt = document.getElementById("rt");
+const tampil_rt = document.querySelector(".tampil_rt");
 const art = document.getElementById("art");
+const tampil_art = document.querySelector(".tampil_art");
 const data_kecamatan = document.getElementById("data_kecamatan");
 const data_desa = document.getElementById("data_desa");
-const modal_footer = document.querySelector(".modal-footer");
+const result = document.querySelector("#result");
 
 function renderSQL(sql, id){
 	if(sql == '' || sql == 'undefined'){
@@ -38,6 +40,24 @@ function renderSQL(sql, id){
 	return data;
 }
 
+function clearTag(attr){
+	const tag = document.querySelector(attr);
+	if(tag){
+		tag.remove();
+	}
+}
+
+function decodeString(str){
+	const char = ["B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "A", "L", "M", "N", "O", "5", "9", "S", "U", "7", "6", "3", "8", "4", "1", "2", " "];
+    const encode = ["€", "£", "¥", "∞", "µ", "α", "β", "π", "Ω", "∑", "#", "§", "†", "Φ", "℗", "∂", "ⱷ", "±", "≠", "ⱴ", "¤", "«", "¶", "»", "ō", "ƍ", "ʓ"];
+
+	let newStr='';
+	for(let j=0; j<str.length; j++){
+		newStr +=(encode.indexOf(str.charAt(j))) == -1 ? str.charAt(j) : char[encode.indexOf(str.charAt(j))];
+	}
+	return newStr;
+}
+
 function renderItem(items){
 	let i = 0;
 	let item = '';
@@ -50,24 +70,49 @@ function renderItem(items){
 	return item;
 }
 
-function renderModalAtributes(label){
-	clearTag('.tampil');
-	document.getElementById("exampleModalLabel").innerHTML = label;
+function renderTable(data){
+	const table = document.createElement('table');
+	const tableHead = document.createElement('thead');
+	const tableBody = document.createElement('tbody');
 
-	const btn = document.createElement('button');
-	btn.className = "btn btn-primary tampil";
-	btn.appendChild(document.createTextNode(label));
-	
-	return modal_footer.appendChild(btn);
+	const rowHead = document.createElement('tr');
+	data[0].columns.forEach( (val, key) => {
+		let cell = document.createElement('td');
+		cell.appendChild(document.createTextNode(val))
+		rowHead.appendChild(cell);
+	} )
+	tableHead.appendChild(rowHead);
+
+	data[0].values.forEach( (val, key) => {
+		let rowBody = document.createElement('tr');
+		val.forEach( (val2, key2) => {
+
+			let cell = document.createElement('td');
+			cell.appendChild(document.createTextNode(decodeString(val2)))
+			rowBody.appendChild(cell);
+		} )
+		tableBody.appendChild(rowBody);
+	} )
+
+	table.appendChild(tableHead);
+	table.appendChild(tableBody);
+	table.setAttribute("id", "table-result");
+	return table;
 }
 
-function clearTag(attr){
-	const tag = document.querySelector(attr);
-	if(tag){
-		tag.remove();
+function renderModalAtributes(label, className){
+
+	document.getElementById("exampleModalLabel").innerHTML = label;
+	if(className == 'tampil_rt'){
+		document.querySelector('.tampil_rt').style.display = 'block';
+		document.querySelector('.tampil_art').style.display = 'none';
+	}
+
+	if(className == 'tampil_art'){
+		document.querySelector('.tampil_rt').style.display = 'none';
+		document.querySelector('.tampil_art').style.display = 'block';
 	}
 }
-
 
 rt.addEventListener('click', function(){
 
@@ -80,7 +125,7 @@ rt.addEventListener('click', function(){
 		document.querySelector("#data_desa").innerHTML = "";
 	}
 
-	renderModalAtributes('Tampil RT');
+	renderModalAtributes('Tampil RT', 'tampil_rt');
 	$("#modalInfo").show();
 })
 
@@ -95,7 +140,7 @@ art.addEventListener('click', function(){
 		document.querySelector("#data_desa").innerHTML = "";
 	}
 
-	renderModalAtributes('Tampil ART');
+	renderModalAtributes('Tampil ART', 'tampil_art');
 	$("#modalInfo").show();
 })
 
@@ -107,27 +152,52 @@ data_kecamatan.addEventListener('change', () => {
 	});
 })
 
+tampil_rt.addEventListener('click', () => {
+	const kec = data_kecamatan.value;
+	const desa = data_desa.value;
+
+	var data = renderSQL("SELECT IDBDT, Nama_KRT, Alamat FROM udrt WHERE KDKEC='"+kec+"' AND KDDESA='"+desa+"' AND KDKAB='20' ORDER BY IDBDT", "result");
+	chrome.runtime.sendMessage(data, function(response) {
+		console.log('responeMessage', response);
+	});
+})
+
+tampil_art.addEventListener('click', () => {
+	const kec = data_kecamatan.value;
+	const desa = data_desa.value;
+
+	var data = renderSQL("SELECT IDARTBDT, IDBDT, Nama, NIK, NoKK, DUK_ALAMAT FROM udart WHERE KDKEC='"+kec+"' AND KDDESA='"+desa+"' AND KDKAB='20' ORDER BY IDARTBDT", "result");
+	chrome.runtime.sendMessage(data, function(response) {
+		console.log('responeMessage', response);
+	});
+})
+
 chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 	console.log('sender, request', sender, request);
 
 	var current_url = window.location.href;
 	if(request.type == 'response-fecth-sql'){
 
+		let data;
 		var res = request.data;
 		if(request.message.id=='data_kecamatan'){
-
-			let data = renderItem(res[0].values);
-			jQuery('#'+request.message.id).html(data);
+			data = renderItem(res[0].values);
 		}
 
 		if(request.message.id=='data_desa'){
-
-			let data = renderItem(res[0].values);
-			jQuery('#'+request.message.id).html(data);
+			data = renderItem(res[0].values);
 		}
 
-		jQuery('#wrap-loading').hide();
-	}
+		if(request.message.id=='result'){
+			data = renderTable(res);
+		}
 
+		jQuery('#'+request.message.id).html(data);
+		$(document).ready(function() {
+		    $('#table-result').DataTable();
+		} );
+	}
+	
+	jQuery('#wrap-loading').hide();
 	return sendResponse("THANKS from content_script!");
 });
