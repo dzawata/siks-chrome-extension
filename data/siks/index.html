@@ -34,20 +34,24 @@
 	        </form>
 	      </div>
 	      <div class="modal-footer">
-	      		<button class="btn btn-primary tampil_rt" style="display: none">Tampil RT</button>
+	      		<button class="btn btn-success tampil_rt" style="display: none">Tampil RT</button>
 	      		<button class="btn btn-primary tampil_art" style="display: none">Tampil ART</button>
 	      </div>
 	    </div>
 	  </div>
 	</div>
 
-	<div>
+	<div class="container"><br>
 		<div class="row">
-			<div class="col-lg-12">
-				<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInfo" id="rt">Data RT</button>
+			<div class="col-lg-11">
+				<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalInfo" id="rt">Data RT</button>
 				<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInfo" id="art">Data ART</button>
 			</div>
+			<div class="col-lg-1">
+				<button type="button" class="btn btn-warning btn-sm" id="export" style="display: none">Export</button>
+			</div>
 		</div>
+		<hr class="mt-2 mb-3"/>
 		<div class="row">
 			<div class="col-lg-12">
 				<div id="result"></div>

@@ -26,6 +26,7 @@ const data_desa = document.getElementById("data_desa");
 const result = document.querySelector("#result");
 
 function renderSQL(sql, id){
+	console.log(sql);
 	if(sql == '' || sql == 'undefined'){
 		sql = "SELECT name FROM sqlite_master WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%' ORDER BY 1";
 	}
@@ -59,13 +60,12 @@ function decodeString(str){
 }
 
 function renderItem(items){
-	let i = 0;
+	console.log(items);
 	let item = '';
 
 	item +=`<option>Pilih Salah Satu</option>`;
 	items.forEach( (val, key) => {
-		item +=`<option value="${val[0]}">"${val[1]}"</option>`;
-		i++;
+		item +="<option value='"+val[0]+"'>"+val[1]+"</option>";
 	} );
 	return item;
 }
@@ -97,6 +97,7 @@ function renderTable(data){
 	table.appendChild(tableHead);
 	table.appendChild(tableBody);
 	table.setAttribute("id", "table-result");
+	table.className = "table table-striped table-bordered";
 	return table;
 }
 
@@ -156,7 +157,8 @@ tampil_rt.addEventListener('click', () => {
 	const kec = data_kecamatan.value;
 	const desa = data_desa.value;
 
-	var data = renderSQL("SELECT IDBDT, Nama_KRT, Alamat FROM udrt WHERE KDKEC='"+kec+"' AND KDDESA='"+desa+"' AND KDKAB='20' ORDER BY IDBDT", "result");
+	// var data = renderSQL("SELECT a.IDBDT, a.Nama_KRT, a.Alamat FROM udrt a WHERE a.KDKEC='"+kec+"' AND a.KDDESA='"+desa+"' AND a.KDKAB='20' ORDER BY a.IDBDT", "result");
+	var data = renderSQL("SELECT a.IDBDT, a.Nama_KRT, b.NIK, b. NoKK, a.Alamat FROM udrt a INNER JOIN udart b ON a.IDBDT=b.IDBDT WHERE a.KDKEC='"+kec+"' AND a.KDDESA='"+desa+"' AND a.KDKAB='20' AND b.Hub_KRT='1' ORDER BY a.IDBDT", "result");
 	chrome.runtime.sendMessage(data, function(response) {
 		console.log('responeMessage', response);
 	});
@@ -166,7 +168,7 @@ tampil_art.addEventListener('click', () => {
 	const kec = data_kecamatan.value;
 	const desa = data_desa.value;
 
-	var data = renderSQL("SELECT IDARTBDT, IDBDT, Nama, NIK, NoKK, DUK_ALAMAT FROM udart WHERE KDKEC='"+kec+"' AND KDDESA='"+desa+"' AND KDKAB='20' ORDER BY IDARTBDT", "result");
+	var data = renderSQL("SELECT IDARTBDT, IDBDT, Nama, NIK, NoKK, DUK_ALAMAT AS ALAMAT FROM udart WHERE KDKEC='"+kec+"' AND KDDESA='"+desa+"' AND KDKAB='20' ORDER BY IDARTBDT", "result");
 	chrome.runtime.sendMessage(data, function(response) {
 		console.log('responeMessage', response);
 	});
@@ -190,6 +192,7 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 
 		if(request.message.id=='result'){
 			data = renderTable(res);
+			document.querySelector("#export").style.display = "block";
 		}
 
 		jQuery('#'+request.message.id).html(data);
